@@ -1,7 +1,5 @@
 package com.watchora.videos_service.service;
 
-import com.watchora.videos_service.config.KafkaConfig;
-import com.watchora.videos_service.config.S3Config;
 import com.watchora.videos_service.envet.VideoUploadedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -29,9 +27,9 @@ public class VideoService {
     private  static  final String Video_Uploaded_Topic = "video.uploaded";
 
     /**
-     * uplaod video to AWS s3 and public videoUploadedEvent to kafka
-     *
-     * FLOW
+     * upload video to AWS s3 and public videoUploadedEvent to kafka
+     * ------------------>
+     * Flow
      * 1 Receive multipart video  file
      * 2 Generate unique s3 key
      * 3 Uploade to S3
@@ -54,7 +52,7 @@ public class VideoService {
 
         log.info("Uploaded video to S3 : {}", videoKey);
 
-        // Public envet to Kafka
+        // Public event to Kafka
         // Encoding Service will consume this and Start ffmpeg processing
 
         VideoUploadedEvent videoUploadedEvent = new VideoUploadedEvent(movieId, videoKey, bucketName, file.getOriginalFilename(),  file.getSize());
