@@ -1,3 +1,58 @@
 spring:
   application:
     name: encoding-service
+
+  Kafka :
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id : encoding-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka .common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "+"
+            use:
+              type:
+                headers: false
+              value:
+                default :
+                  type : com.watchora.encodingservice.event.VideoUploadedEvent
+    producer:
+      key-deserializer: org.apache.kafka .common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+server:
+  port : 8083
+
+aws:
+  access-key:
+    ${AWS_ACCESS_KEY: YOUR-KEY }
+  secret-key:
+    ${AWS_SECRET_KEY: YOUR-KEY }
+  region:
+    ${AWS_REGION: }
+
+  S3:
+    bucket-name:
+      ${AWS_BUCKET_NAME: }
+
+
+#FFmpeg configration
+ffmpeg:
+  path:
+  ${FFMPEG_PATH : ffmpeg}
+
+#Temp director for encoding
+encoding:
+  base_path: ${TEMP_DIR:/tmp/encoding}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+
